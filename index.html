@@ -34,9 +34,9 @@
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="cart-badge">1</span>
+            <span class="cart-badge" id="mainCartBadge" style="display: none;">0</span>
         </div>
-        <button class="btn-order-now" data-mk="НАРАЧАЈ СЕГА" data-en="ORDER NOW">НАРАЧАЈ СЕГА</button>
+<button id="naracajSegaBtn" data-en="Order History" data-mk="Историја на нарачки">Историја на нарачки</button>
     </div>
 </header>
 
@@ -232,6 +232,14 @@
             <div class="cat-card" data-target="cat-toasted">
                 <div class="cat-img-placeholder" data-mk="Слика Тост" data-en="Toast Image">Слика Тост</div>
                 <h3 data-mk="ПЕЧЕНИ СЕНДВИЧИ" data-en="TOASTED SANDWICHES">ПЕЧЕНИ СЕНДВИЧИ</h3>
+            </div>
+            <div class="cat-card" data-target="cat-hot">
+                <div class="cat-img-placeholder" data-mk="HOTDOG" data-en="HOTDOG">HOTDOG</div> 
+                <h3 data-mk="ХОТ ДОГ" data-en="HOT DOG">ХОТ ДОГ</h3>
+            </div>
+            <div class="cat-card" data-target="cat-tost">
+                <div class="cat-img-placeholder" data-mk="ТОСТОВИ" data-en="TOAST">TOAST</div> 
+                <h3 data-mk="ТОСТОВИ" data-en="TOAST">ТОСТОВИ</h3>
             </div>
             <div class="cat-card" data-target="cat-french">
                 <div class="cat-img-placeholder" data-mk="Слика Француски" data-en="French Image">Слика Француски</div>
@@ -429,7 +437,8 @@
                     </div>
                 </div>
             </div>
-            
+        </div>   
+        <div id="cat-hot" class="menu-category-section"> 
             <h3 class="menu-category-title" data-mk="ХОТ ДОГ" data-en="HOT DOGS" style="margin-top: 40px;">ХОТ ДОГ</h3>
             <div class="menu-grid">
                 <div class="menu-item anim-left">
@@ -497,7 +506,8 @@
                     </div>
                 </div>
             </div>
-
+        </div>   
+        <div id="cat-tost" class="menu-category-section">
             <h3 class="menu-category-title" data-mk="ТОСТ" data-en="TOAST" style="margin-top: 40px;">ТОСТ</h3>
             <div class="menu-grid">
                 <div class="menu-item anim-left">
@@ -828,6 +838,13 @@
                 <div class="footer-contact-details">
                     <p><span>📍</span> Прилеп, Македонија</p>
                     <p><span>📞</span> <a href="tel:+389078451919">+389 078 45 19 19</a></p>
+                    
+                    <p style="margin-top: 15px;">
+                        <a href="#" id="openTicketScanner" style="color: var(--brand-orange); font-size: 0.95rem; font-weight: 900; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">🎫</span> Проверка на нарачка
+                        </a>
+                    </p>
+                    
                 </div>
             </div>
 
@@ -872,6 +889,115 @@
             <p>&copy; 2026 MAMLI. All rights reserved.</p>
         </div>
     </footer>
+    <div id="modalOverlay" class="modal-overlay"></div>
+
+<div id="itemModal" class="modal-box">
+    <button class="modal-close" id="closeItemModal">×</button>
+    <img id="modalItemImg" src="" alt="Item" class="modal-img">
+    <h3 id="modalItemTitle" class="modal-title"></h3>
+    <p id="modalItemDesc" class="modal-desc"></p>
     
+    <div class="modal-options-wrap" id="modalOptionsWrap">
+        <h4 data-mk="Додатоци (Опционално):" data-en="Extras (Optional):">Додатоци (Опционално):</h4>
+        
+        <label class="custom-checkbox">
+            <input type="checkbox" class="item-addon" data-addon-price="40" data-addon-mk="Екстра Помфрит" data-addon-en="Extra Fries">
+            <div class="checkmark-wrap">
+                <span class="checkmark"></span>
+                <span class="addon-name" data-mk="Екстра Помфрит" data-en="Extra Fries">Екстра Помфрит</span>
+            </div>
+            <span class="addon-price">+40 ден.</span>
+        </label>
+        
+        <label class="custom-checkbox">
+            <input type="checkbox" class="item-addon" data-addon-price="0" data-addon-mk="Салата" data-addon-en="Salad">
+            <div class="checkmark-wrap">
+                <span class="checkmark"></span>
+                <span class="addon-name" data-mk="Салата" data-en="Salad">Салата</span>
+            </div>
+        </label>
+        
+        <label class="custom-checkbox">
+            <input type="checkbox" class="item-addon" data-addon-price="0" data-addon-mk="Кечап" data-addon-en="Ketchup">
+            <div class="checkmark-wrap">
+                <span class="checkmark"></span>
+                <span class="addon-name" data-mk="Кечап" data-en="Ketchup">Кечап</span>
+            </div>
+        </label>
+        
+        <label class="custom-checkbox">
+            <input type="checkbox" class="item-addon" data-addon-price="0" data-addon-mk="Мајонез" data-addon-en="Mayo">
+            <div class="checkmark-wrap">
+                <span class="checkmark"></span>
+                <span class="addon-name" data-mk="Мајонез" data-en="Mayo">Мајонез</span>
+            </div>
+        </label>
+    </div>
+
+    <div class="modal-price-wrap">
+        <span id="modalItemPrice" class="modal-price"></span>
+    </div>
+    
+    <div class="modal-qty-controls">
+        <button id="qtyBtnMinus" class="qty-btn">-</button>
+        <input type="number" id="qtyInput" value="1" min="1" max="20" readonly>
+        <button id="qtyBtnPlus" class="qty-btn">+</button>
+    </div>
+    
+    <button id="btnAddToCart" class="btn-primary" data-mk="ДОДАЈ ВО КОШНИЧКА" data-en="ADD TO CART">ДОДАЈ ВО КОШНИЧКА</button>
+</div>
+</div>
+<div id="cartModal" class="modal-box cart-modal">
+        <button class="modal-close">×</button>
+        <h3 class="modal-title" data-mk="Твојата Кошничка" data-en="Your Cart">Твојата Кошничка</h3>
+        <div id="cartItemsList" class="cart-items-list">
+            </div>
+        <div class="cart-total-wrap">
+            <span data-mk="Вкупно:" data-en="Total:">Вкупно:</span>
+            <span id="cartTotalValue">0 ден.</span>
+        </div>
+        <button id="btnCheckout" class="btn-primary" data-mk="НАПЛАТИ" data-en="CHECKOUT">НАПЛАТИ</button>
+    </div>
+
+    <div id="checkoutModal" class="modal-box">
+        <button class="modal-close">×</button>
+        <h3 class="modal-title" data-mk="Направи слика од ова!" data-en=" Take a Screenshot!">Направи слика од ова!</h3>
+        <p class="modal-desc" data-mk="Покажи го овој код на каса за да ја нарачаш храната." data-en="Show this code at the counter to order your food.">Покажи го овој код на каса за да ја нарачаш храната.</p>
+        <div id="quickCodeDisplay" class="quick-code"></div>
+        <button id="btnFinishOrder" class="btn-primary" data-mk="ЗАТВОРИ" data-en="CLOSE">ЗАТВОРИ</button>
+        
+        <div class="checkout-google-wrap">
+            <p class="checkout-google-text">
+                <img src="img/logo.png" alt="logo" class="google-logo-img">
+                <span data-mk="Посетете нè или оставете оценка на Google:" data-en="Visit us or leave a rating on Google:">Посетете нè или оставете оценка на Google:</span>
+            </p>
+            <div class="checkout-actions-row">
+                <a href="https://www.google.com/maps/search/?api=1&query=Mamli+Prilep&query_place_id=ChIJ75y-p-brVhMRtT-DgF7IoEM" target="_blank" class="btn-secondary" data-mk="НАСОКИ" data-en="DIRECTIONS">НАСОКИ</a>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJ75y-p-brVhMRtT-DgF7IoEM" target="_blank" class="btn-secondary review-btn-stars" data-mk="ОЦЕНКА ★★★★☆" data-en="RATE US ★★★★☆">ОЦЕНКА ★★★★☆</a>
+            </div>
+        </div>
+        </div>
+        <div id="historyModal" class="modal-box">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 data-en="Order History" data-mk="Историја на нарачки" style="margin: 0;">Историја на нарачки</h3>
+        <button class="modal-close" style="background: none; border: none; font-size: 1.8rem; cursor: pointer;">&times;</button>
+    </div>
+    <div id="historyCodesList" style="max-height: 300px; overflow-y: auto;"></div>
+</div>
+
+<div id="ticketModal" class="modal-box">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0; color: var(--brand-brown); font-family: var(--font-display);">🎫 Провери Нарачка</h3>
+        <button class="modal-close" style="background: none; border: none; font-size: 1.8rem; cursor: pointer;">×</button>
+    </div>
+    
+    <p style="font-size: 0.9rem; color: #777; margin-bottom: 15px; font-weight: 700;">Внесете го вашиот код (на пр. #MML-A1B2) за да го проверите статусот и сметката.</p>
+    
+    <input type="text" id="ticketInput" placeholder="#MML-XXXX" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid var(--brand-brown); border-radius: 10px; font-size: 1.1rem; text-transform: uppercase; text-align: center; font-weight: 900; outline: none;">
+    
+    <button id="btnCheckTicket" class="btn-primary" style="margin-bottom: 15px;">🔍 ПРОВЕРИ КОД</button>
+    
+    <div id="ticketResultBox" style="display: none; text-align: left; background: var(--bg-cream); padding: 15px; border-radius: 10px; border: 1px dashed #ccc;"></div>
+</div>
 </body>
 </html>
